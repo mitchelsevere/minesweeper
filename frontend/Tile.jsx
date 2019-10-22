@@ -11,16 +11,16 @@ const StyledTile = styled.div`
     align-items: center;
     border-style: inset;
     border-color: #507a90;
-    font-family: "Inconsolata", monospace;
+    font-family: "Anton", sans-serif;
     font-weight: 900;
+    color: #fff;
     cursor: pointer;
+    transition: 100ms all ease-in;
     ${props =>
         props.explored &&
         css`
-            border-style: none;
             border-color: none;
             background: #024161;
-            color: #fff;
         `}
 `;
 
@@ -31,8 +31,9 @@ class Tile extends React.Component {
         this.getValue = this.getValue.bind(this);
     }
     handleClick(e) {
+        e.preventDefault();
         let flagged = this.props.tile.flagged;
-        if (e.altKey) flagged = !flagged;
+        if (e.type === "contextmenu") flagged = !flagged;
         this.props.updateGame(this.props.tile, flagged);
     }
     getValue() {
@@ -53,6 +54,7 @@ class Tile extends React.Component {
     render() {
         return (
             <StyledTile
+                onContextMenu={this.handleClick}
                 onClick={this.handleClick}
                 explored={this.props.tile.explored}
             >

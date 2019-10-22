@@ -361,7 +361,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
 function _templateObject2() {
-  var data = _taggedTemplateLiteral(["\n            border-style: none;\n            border-color: none;\n            background: #024161;\n            color: #fff;\n        "]);
+  var data = _taggedTemplateLiteral(["\n            border-color: none;\n            background: #024161;\n        "]);
 
   _templateObject2 = function _templateObject2() {
     return data;
@@ -371,7 +371,7 @@ function _templateObject2() {
 }
 
 function _templateObject() {
-  var data = _taggedTemplateLiteral(["\n    background: #507a90;\n    width: 45px;\n    height: 45px;\n    border-radius: 5px;\n    display: inline-flex;\n    justify-content: center;\n    align-items: center;\n    border-style: inset;\n    border-color: #507a90;\n    font-family: \"Inconsolata\", monospace;\n    font-weight: 900;\n    cursor: pointer;\n    ", "\n"]);
+  var data = _taggedTemplateLiteral(["\n    background: #507a90;\n    width: 45px;\n    height: 45px;\n    border-radius: 5px;\n    display: inline-flex;\n    justify-content: center;\n    align-items: center;\n    border-style: inset;\n    border-color: #507a90;\n    font-family: \"Anton\", sans-serif;\n    font-weight: 900;\n    color: #fff;\n    cursor: pointer;\n    transition: 100ms all ease-in;\n    ", "\n"]);
 
   _templateObject = function _templateObject() {
     return data;
@@ -407,8 +407,9 @@ function (_React$Component) {
   _createClass(Tile, [{
     key: "handleClick",
     value: function handleClick(e) {
+      e.preventDefault();
       var flagged = this.props.tile.flagged;
-      if (e.altKey) flagged = !flagged;
+      if (e.type === "contextmenu") flagged = !flagged;
       this.props.updateGame(this.props.tile, flagged);
     }
   }, {
@@ -432,6 +433,7 @@ function (_React$Component) {
     key: "render",
     value: function render() {
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(StyledTile, {
+        onContextMenu: this.handleClick,
         onClick: this.handleClick,
         explored: this.props.tile.explored
       }, this.getValue());
