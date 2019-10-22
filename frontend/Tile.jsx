@@ -1,5 +1,5 @@
 import React from "react";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
 const StyledTile = styled.div`
     background: #507a90;
@@ -14,6 +14,14 @@ const StyledTile = styled.div`
     font-family: "Inconsolata", monospace;
     font-weight: 900;
     cursor: pointer;
+    ${props =>
+        props.explored &&
+        css`
+            border-style: none;
+            border-color: none;
+            background: #024161;
+            color: #fff;
+        `}
 `;
 
 class Tile extends React.Component {
@@ -28,8 +36,8 @@ class Tile extends React.Component {
         this.props.updateGame(this.props.tile, flagged);
     }
     getValue() {
-        if (this.props.tile.flagged) {
-            return "🚩";
+        if (!this.props.tile.explored) {
+            return this.props.tile.flagged ? "🚩" : null;
         }
 
         if (this.props.tile.bombed) {
@@ -44,7 +52,10 @@ class Tile extends React.Component {
     }
     render() {
         return (
-            <StyledTile onClick={this.handleClick}>
+            <StyledTile
+                onClick={this.handleClick}
+                explored={this.props.tile.explored}
+            >
                 {this.getValue()}
             </StyledTile>
         );

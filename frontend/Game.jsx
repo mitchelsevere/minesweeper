@@ -15,7 +15,6 @@ class Game extends React.Component {
         this.setState(() => ({
             board: this.state.board
         }));
-        console.log(tile.adjacentBombCount());
     }
     render() {
         return (

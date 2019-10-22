@@ -254,7 +254,6 @@ function (_React$Component) {
           board: _this2.state.board
         };
       });
-      console.log(tile.adjacentBombCount());
     }
   }, {
     key: "render",
@@ -361,8 +360,18 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
+function _templateObject2() {
+  var data = _taggedTemplateLiteral(["\n            border-style: none;\n            border-color: none;\n            background: #024161;\n            color: #fff;\n        "]);
+
+  _templateObject2 = function _templateObject2() {
+    return data;
+  };
+
+  return data;
+}
+
 function _templateObject() {
-  var data = _taggedTemplateLiteral(["\n    background: #507a90;\n    width: 45px;\n    height: 45px;\n    border-radius: 5px;\n    display: inline-flex;\n    justify-content: center;\n    align-items: center;\n    border-style: inset;\n    border-color: #507a90;\n    font-family: \"Inconsolata\", monospace;\n    font-weight: 900;\n    cursor: pointer;\n"]);
+  var data = _taggedTemplateLiteral(["\n    background: #507a90;\n    width: 45px;\n    height: 45px;\n    border-radius: 5px;\n    display: inline-flex;\n    justify-content: center;\n    align-items: center;\n    border-style: inset;\n    border-color: #507a90;\n    font-family: \"Inconsolata\", monospace;\n    font-weight: 900;\n    cursor: pointer;\n    ", "\n"]);
 
   _templateObject = function _templateObject() {
     return data;
@@ -375,7 +384,9 @@ function _taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(
 
 
 
-var StyledTile = styled_components__WEBPACK_IMPORTED_MODULE_1__["default"].div(_templateObject());
+var StyledTile = styled_components__WEBPACK_IMPORTED_MODULE_1__["default"].div(_templateObject(), function (props) {
+  return props.explored && Object(styled_components__WEBPACK_IMPORTED_MODULE_1__["css"])(_templateObject2());
+});
 
 var Tile =
 /*#__PURE__*/
@@ -403,8 +414,8 @@ function (_React$Component) {
   }, {
     key: "getValue",
     value: function getValue() {
-      if (this.props.tile.flagged) {
-        return "🚩";
+      if (!this.props.tile.explored) {
+        return this.props.tile.flagged ? "🚩" : null;
       }
 
       if (this.props.tile.bombed) {
@@ -421,7 +432,8 @@ function (_React$Component) {
     key: "render",
     value: function render() {
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(StyledTile, {
-        onClick: this.handleClick
+        onClick: this.handleClick,
+        explored: this.props.tile.explored
       }, this.getValue());
     }
   }]);
