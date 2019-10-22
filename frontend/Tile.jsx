@@ -3,15 +3,51 @@ import styled from "styled-components";
 
 const StyledTile = styled.div`
     background: #507a90;
-    width: 40px;
-    height: 40px;
+    width: 45px;
+    height: 45px;
     border-radius: 5px;
-    margin: 2px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    border-style: inset;
+    border-color: #507a90;
+    font-family: "Inconsolata", monospace;
+    font-weight: 900;
+    cursor: pointer;
 `;
 
 class Tile extends React.Component {
+    constructor(props) {
+        super(props);
+        this.handleClick = this.handleClick.bind(this);
+        this.getValue = this.getValue.bind(this);
+    }
+    handleClick(e) {
+        let flagged = this.props.tile.flagged;
+        if (e.altKey) flagged = !flagged;
+        this.props.updateGame(this.props.tile, flagged);
+    }
+    getValue() {
+        if (this.props.tile.flagged) {
+            return "🚩";
+        }
+
+        if (this.props.tile.bombed) {
+            return "💣";
+        }
+
+        if (this.props.tile.adjacentBombCount() === 0) {
+            return null;
+        }
+
+        return this.props.tile.adjacentBombCount();
+    }
     render() {
-        return <StyledTile></StyledTile>;
+        return (
+            <StyledTile onClick={this.handleClick}>
+                {this.getValue()}
+            </StyledTile>
+        );
     }
 }
 

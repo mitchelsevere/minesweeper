@@ -6,12 +6,16 @@ class Game extends React.Component {
     constructor() {
         super();
         this.state = {
-            board: new Minesweeper.Board()
+            board: new Minesweeper.Board(9, 9)
         };
         this.updateGame = this.updateGame.bind(this);
     }
-    updateGame() {
-        return "updateGame";
+    updateGame(tile, flagged) {
+        flagged ? tile.toggleFlag() : tile.explore();
+        this.setState(() => ({
+            board: this.state.board
+        }));
+        console.log(tile.adjacentBombCount());
     }
     render() {
         return (

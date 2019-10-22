@@ -139,7 +139,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
 function _templateObject() {
-  var data = _taggedTemplateLiteral(["\n    background: #0f2949;\n    width: 500px;\n    height: 500px;\n"]);
+  var data = _taggedTemplateLiteral(["\n    background: #0f2949;\n    width: 500px;\n    height: 500px;\n    display: flex;\n    justify-content: space-between;\n    align-items: center;\n    flex-wrap: wrap;\n    padding: 30px;\n    box-shadow: 0 3px 15px rgba(200, 200, 200, 1);\n    border-radius: 20px;\n"]);
 
   _templateObject = function _templateObject() {
     return data;
@@ -169,8 +169,16 @@ function (_React$Component) {
   _createClass(Board, [{
     key: "render",
     value: function render() {
-      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(StyledBoard, null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Tile__WEBPACK_IMPORTED_MODULE_2__["default"], {
-        updateGame: this.props.updateGame
+      var _this = this;
+
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(StyledBoard, null, this.props.board.grid.map(function (gridrow, topIdx) {
+        return gridrow.map(function (tile, idx) {
+          return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Tile__WEBPACK_IMPORTED_MODULE_2__["default"], {
+            key: idx,
+            tile: tile,
+            updateGame: _this.props.updateGame
+          });
+        });
       }));
     }
   }]);
@@ -229,7 +237,7 @@ function (_React$Component) {
 
     _this = _possibleConstructorReturn(this, _getPrototypeOf(Game).call(this));
     _this.state = {
-      board: new _minesweeper__WEBPACK_IMPORTED_MODULE_1__["Board"]()
+      board: new _minesweeper__WEBPACK_IMPORTED_MODULE_1__["Board"](9, 9)
     };
     _this.updateGame = _this.updateGame.bind(_assertThisInitialized(_this));
     return _this;
@@ -237,8 +245,16 @@ function (_React$Component) {
 
   _createClass(Game, [{
     key: "updateGame",
-    value: function updateGame() {
-      return "updateGame";
+    value: function updateGame(tile, flagged) {
+      var _this2 = this;
+
+      flagged ? tile.toggleFlag() : tile.explore();
+      this.setState(function () {
+        return {
+          board: _this2.state.board
+        };
+      });
+      console.log(tile.adjacentBombCount());
     }
   }, {
     key: "render",
@@ -337,16 +353,16 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
 function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
 function _templateObject() {
-  var data = _taggedTemplateLiteral(["\n    background: #507a90;\n    width: 40px;\n    height: 40px;\n    border-radius: 5px;\n    margin: 2px;\n"]);
+  var data = _taggedTemplateLiteral(["\n    background: #507a90;\n    width: 45px;\n    height: 45px;\n    border-radius: 5px;\n    display: inline-flex;\n    justify-content: center;\n    align-items: center;\n    border-style: inset;\n    border-color: #507a90;\n    font-family: \"Inconsolata\", monospace;\n    font-weight: 900;\n    cursor: pointer;\n"]);
 
   _templateObject = function _templateObject() {
     return data;
@@ -366,16 +382,47 @@ var Tile =
 function (_React$Component) {
   _inherits(Tile, _React$Component);
 
-  function Tile() {
+  function Tile(props) {
+    var _this;
+
     _classCallCheck(this, Tile);
 
-    return _possibleConstructorReturn(this, _getPrototypeOf(Tile).apply(this, arguments));
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(Tile).call(this, props));
+    _this.handleClick = _this.handleClick.bind(_assertThisInitialized(_this));
+    _this.getValue = _this.getValue.bind(_assertThisInitialized(_this));
+    return _this;
   }
 
   _createClass(Tile, [{
+    key: "handleClick",
+    value: function handleClick(e) {
+      var flagged = this.props.tile.flagged;
+      if (e.altKey) flagged = !flagged;
+      this.props.updateGame(this.props.tile, flagged);
+    }
+  }, {
+    key: "getValue",
+    value: function getValue() {
+      if (this.props.tile.flagged) {
+        return "🚩";
+      }
+
+      if (this.props.tile.bombed) {
+        return "💣";
+      }
+
+      if (this.props.tile.adjacentBombCount() === 0) {
+        return null;
+      }
+
+      return this.props.tile.adjacentBombCount();
+    }
+  }, {
     key: "render",
     value: function render() {
-      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(StyledTile, null);
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(StyledTile, {
+        onClick: this.handleClick
+      }, this.getValue());
     }
   }]);
 
