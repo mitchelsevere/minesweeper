@@ -130,9 +130,9 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
 function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
@@ -161,22 +161,33 @@ function (_React$Component) {
   _inherits(Board, _React$Component);
 
   function Board(props) {
+    var _this;
+
     _classCallCheck(this, Board);
 
-    return _possibleConstructorReturn(this, _getPrototypeOf(Board).call(this, props));
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(Board).call(this, props));
+    _this.revealBoard = _this.revealBoard.bind(_assertThisInitialized(_this));
+    return _this;
   }
 
   _createClass(Board, [{
+    key: "revealBoard",
+    value: function revealBoard() {
+      return this.props.board.lost() || this.props.board.won();
+    }
+  }, {
     key: "render",
     value: function render() {
-      var _this = this;
+      var _this2 = this;
 
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(StyledBoard, null, this.props.board.grid.map(function (gridrow, topIdx) {
         return gridrow.map(function (tile, idx) {
           return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Tile__WEBPACK_IMPORTED_MODULE_2__["default"], {
             key: idx,
             tile: tile,
-            updateGame: _this.props.updateGame
+            reveal: tile.explored || _this2.revealBoard(),
+            updateGame: _this2.props.updateGame,
+            gameOver: _this2.revealBoard()
           });
         });
       }));
@@ -473,6 +484,10 @@ function (_React$Component) {
   }, {
     key: "getValue",
     value: function getValue() {
+      if (this.props.gameOver) {
+        this.props.tile.explore();
+      }
+
       if (!this.props.tile.explored) {
         return this.props.tile.flagged ? "🚩" : null;
       }
@@ -493,7 +508,7 @@ function (_React$Component) {
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(StyledTile, {
         onContextMenu: this.handleClick,
         onClick: this.handleClick,
-        explored: this.props.tile.explored
+        explored: this.props.reveal
       }, this.getValue());
     }
   }]);

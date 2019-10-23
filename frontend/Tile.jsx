@@ -38,6 +38,10 @@ class Tile extends React.Component {
         this.props.updateGame(this.props.tile, flagged, rightClick);
     }
     getValue() {
+        if (this.props.gameOver) {
+            this.props.tile.explore();
+        }
+
         if (!this.props.tile.explored) {
             return this.props.tile.flagged ? "🚩" : null;
         }
@@ -57,7 +61,7 @@ class Tile extends React.Component {
             <StyledTile
                 onContextMenu={this.handleClick}
                 onClick={this.handleClick}
-                explored={this.props.tile.explored}
+                explored={this.props.reveal}
             >
                 {this.getValue()}
             </StyledTile>

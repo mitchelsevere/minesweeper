@@ -1,5 +1,5 @@
 import React from "react";
-import styled, { css } from "styled-components";
+import styled from "styled-components";
 import * as Minesweeper from "../minesweeper";
 import Board from "./Board";
 
@@ -82,10 +82,7 @@ class Game extends React.Component {
                 <Modal>
                     <h3>{this.state.status}</h3>
                 </Modal>
-                <Board
-                    board={this.state.board}
-                    updateGame={this.updateGame}
-                ></Board>
+                <Board board={this.state.board} updateGame={this.updateGame} />
             </StyledGame>
         );
     }

@@ -21,6 +21,10 @@ const StyledBoard = styled.div`
 class Board extends React.Component {
     constructor(props) {
         super(props);
+        this.revealBoard = this.revealBoard.bind(this);
+    }
+    revealBoard() {
+        return this.props.board.lost() || this.props.board.won();
     }
     render() {
         return (
@@ -31,7 +35,9 @@ class Board extends React.Component {
                             <Tile
                                 key={idx}
                                 tile={tile}
+                                reveal={tile.explored || this.revealBoard()}
                                 updateGame={this.props.updateGame}
+                                gameOver={this.revealBoard()}
                             />
                         );
                     });
