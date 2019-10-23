@@ -10,9 +10,12 @@ const StyledBoard = styled.div`
     justify-content: space-between;
     align-items: center;
     flex-wrap: wrap;
-    padding: 30px;
-    box-shadow: 0 3px 15px rgba(200, 200, 200, 1);
+    padding: 22px;
+    box-shadow: 4px 5px 20px 0px rgba(200, 200, 200, 1);
     border-radius: 20px;
+    border-style: inset;
+    border-color: #507a90;
+    border-width: 5px;
 `;
 
 class Board extends React.Component {

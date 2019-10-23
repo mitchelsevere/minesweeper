@@ -33,8 +33,9 @@ class Tile extends React.Component {
     handleClick(e) {
         e.preventDefault();
         let flagged = this.props.tile.flagged;
-        if (e.type === "contextmenu") flagged = !flagged;
-        this.props.updateGame(this.props.tile, flagged);
+        const rightClick = e.type === "contextmenu";
+        if (rightClick) flagged = !flagged;
+        this.props.updateGame(this.props.tile, flagged, rightClick);
     }
     getValue() {
         if (!this.props.tile.explored) {

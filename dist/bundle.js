@@ -139,7 +139,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
 function _templateObject() {
-  var data = _taggedTemplateLiteral(["\n    background: #0f2949;\n    width: 500px;\n    height: 500px;\n    display: flex;\n    justify-content: space-between;\n    align-items: center;\n    flex-wrap: wrap;\n    padding: 30px;\n    box-shadow: 0 3px 15px rgba(200, 200, 200, 1);\n    border-radius: 20px;\n"]);
+  var data = _taggedTemplateLiteral(["\n    background: #0f2949;\n    width: 500px;\n    height: 500px;\n    display: flex;\n    justify-content: space-between;\n    align-items: center;\n    flex-wrap: wrap;\n    padding: 22px;\n    box-shadow: 4px 5px 20px 0px rgba(200, 200, 200, 1);\n    border-radius: 20px;\n    border-style: inset;\n    border-color: #507a90;\n    border-width: 5px;\n"]);
 
   _templateObject = function _templateObject() {
     return data;
@@ -201,8 +201,9 @@ function (_React$Component) {
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _minesweeper__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../minesweeper */ "./minesweeper.js");
-/* harmony import */ var _Board__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Board */ "./frontend/Board.jsx");
+/* harmony import */ var styled_components__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! styled-components */ "./node_modules/styled-components/dist/styled-components.browser.esm.js");
+/* harmony import */ var _minesweeper__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../minesweeper */ "./minesweeper.js");
+/* harmony import */ var _Board__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Board */ "./frontend/Board.jsx");
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -221,9 +222,34 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
+function _templateObject2() {
+  var data = _taggedTemplateLiteral(["\n    display: flex;\n    justify-content: center;\n    align-items: center;\n    height: 200px;\n    background: #0f2949;\n    color: #fff;\n    font-family: \"Anton\", sans-serif;\n    border-radius: 10px;\n    margin-bottom: 41px;\n    transition: 300ms all ease-in;\n    h3 {\n        letter-spacing: 1px;\n        font-size: 2.5rem;\n    }\n    div {\n        display: flex;\n        justify-content: center;\n        align-items: center;\n        background: #fff;\n        width: 50%;\n        height: 40%;\n    }\n"]);
+
+  _templateObject2 = function _templateObject2() {
+    return data;
+  };
+
+  return data;
+}
+
+function _templateObject() {
+  var data = _taggedTemplateLiteral(["\n    h1 {\n        font-size: 24px;\n        color: #1a1a1a;\n        font-family: \"Helvetica\", sans-serif;\n        text-align: center;\n    }\n"]);
+
+  _templateObject = function _templateObject() {
+    return data;
+  };
+
+  return data;
+}
+
+function _taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(0); } return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
 
 
 
+
+
+var StyledGame = styled_components__WEBPACK_IMPORTED_MODULE_1__["default"].div(_templateObject());
+var Modal = styled_components__WEBPACK_IMPORTED_MODULE_1__["default"].div(_templateObject2());
 
 var Game =
 /*#__PURE__*/
@@ -237,31 +263,62 @@ function (_React$Component) {
 
     _this = _possibleConstructorReturn(this, _getPrototypeOf(Game).call(this));
     _this.state = {
-      board: new _minesweeper__WEBPACK_IMPORTED_MODULE_1__["Board"](9, 9)
+      board: new _minesweeper__WEBPACK_IMPORTED_MODULE_2__["Board"](9, 9),
+      isModalOpen: false,
+      status: "Game in Progress"
     };
     _this.updateGame = _this.updateGame.bind(_assertThisInitialized(_this));
+    _this.checkGame = _this.checkGame.bind(_assertThisInitialized(_this));
+    _this.openModal = _this.openModal.bind(_assertThisInitialized(_this));
     return _this;
   }
 
   _createClass(Game, [{
     key: "updateGame",
-    value: function updateGame(tile, flagged) {
+    value: function updateGame(tile, flagged, rightClick) {
       var _this2 = this;
 
-      flagged ? tile.toggleFlag() : tile.explore();
+      if (tile.explored) return null;
+      if (rightClick) tile.toggleFlag();
+      if (!flagged && !rightClick) tile.explore();
       this.setState(function () {
         return {
           board: _this2.state.board
+        };
+      });
+      this.checkGame();
+    }
+  }, {
+    key: "checkGame",
+    value: function checkGame() {
+      var lost = this.state.board.lost();
+      var won = this.state.board.won();
+
+      if (lost) {
+        this.openModal("You Lost.");
+      }
+
+      if (won) {
+        this.openModal("You Win!");
+      }
+    }
+  }, {
+    key: "openModal",
+    value: function openModal(status) {
+      this.setState(function () {
+        return {
+          isModalOpen: true,
+          status: status
         };
       });
     }
   }, {
     key: "render",
     value: function render() {
-      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Board__WEBPACK_IMPORTED_MODULE_2__["default"], {
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(StyledGame, null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(Modal, null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h3", null, this.state.status)), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Board__WEBPACK_IMPORTED_MODULE_3__["default"], {
         board: this.state.board,
         updateGame: this.updateGame
-      });
+      }));
     }
   }]);
 
@@ -409,8 +466,9 @@ function (_React$Component) {
     value: function handleClick(e) {
       e.preventDefault();
       var flagged = this.props.tile.flagged;
-      if (e.type === "contextmenu") flagged = !flagged;
-      this.props.updateGame(this.props.tile, flagged);
+      var rightClick = e.type === "contextmenu";
+      if (rightClick) flagged = !flagged;
+      this.props.updateGame(this.props.tile, flagged, rightClick);
     }
   }, {
     key: "getValue",
