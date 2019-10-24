@@ -10,6 +10,7 @@
     "keywords": [],
     "author": "",
     "license": "ISC",
+    "homepage": "https://mitchelsevere.github.io/minesweeper",
     "babel": {
         "presets": [
             "@babel/preset-env",
