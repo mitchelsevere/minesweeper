@@ -1,5 +1,5 @@
 import React from "react";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import * as Minesweeper from "../minesweeper";
 import Board from "./Board";
 
@@ -13,19 +13,19 @@ const StyledGame = styled.div`
 `;
 
 const Modal = styled.div`
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 200px;
+    flex-wrap: wrap;
     background: #0f2949;
     color: #fff;
     font-family: "Anton", sans-serif;
     border-radius: 10px;
     margin-bottom: 41px;
+    text-align: center;
+    padding: 22px;
     transition: 300ms all ease-in;
     h3 {
         letter-spacing: 1px;
         font-size: 2.5rem;
+        margin: 0 10px 20px;
     }
     div {
         display: flex;
@@ -34,6 +34,23 @@ const Modal = styled.div`
         background: #fff;
         width: 50%;
         height: 40%;
+    }
+    button {
+        background: red;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        text-transform: uppercase;
+        font-size: 1.2rem;
+        font-weight: 900;
+        outline: none;
+        padding: 10px 15px;
+        margin: 0 auto;
+        cursor: pointer;
+        display: none;
+        &.visible {
+            display: block;
+        }
     }
 `;
 
@@ -47,7 +64,9 @@ class Game extends React.Component {
         };
         this.updateGame = this.updateGame.bind(this);
         this.checkGame = this.checkGame.bind(this);
+        this.resetGame = this.resetGame.bind(this);
         this.openModal = this.openModal.bind(this);
+        this.revealBoard = this.revealBoard.bind(this);
     }
     updateGame(tile, flagged, rightClick) {
         if (tile.explored) return null;
@@ -70,10 +89,19 @@ class Game extends React.Component {
             this.openModal("You Win!");
         }
     }
+    revealBoard() {
+        return this.state.board.lost() || this.state.board.won();
+    }
     openModal(status) {
         this.setState(() => ({
             isModalOpen: true,
             status
+        }));
+    }
+    resetGame() {
+        this.setState(() => ({
+            board: new Minesweeper.Board(9, 9),
+            status: "Game in Progress"
         }));
     }
     render() {
@@ -81,8 +109,18 @@ class Game extends React.Component {
             <StyledGame>
                 <Modal>
                     <h3>{this.state.status}</h3>
+                    <button
+                        className={this.revealBoard() ? "visible" : ""}
+                        onClick={this.resetGame}
+                    >
+                        Play Again
+                    </button>
                 </Modal>
-                <Board board={this.state.board} updateGame={this.updateGame} />
+                <Board
+                    board={this.state.board}
+                    updateGame={this.updateGame}
+                    revealBoard={this.revealBoard}
+                />
             </StyledGame>
         );
     }

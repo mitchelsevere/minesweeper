@@ -130,9 +130,9 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
 function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
@@ -161,33 +161,24 @@ function (_React$Component) {
   _inherits(Board, _React$Component);
 
   function Board(props) {
-    var _this;
-
     _classCallCheck(this, Board);
 
-    _this = _possibleConstructorReturn(this, _getPrototypeOf(Board).call(this, props));
-    _this.revealBoard = _this.revealBoard.bind(_assertThisInitialized(_this));
-    return _this;
+    return _possibleConstructorReturn(this, _getPrototypeOf(Board).call(this, props));
   }
 
   _createClass(Board, [{
-    key: "revealBoard",
-    value: function revealBoard() {
-      return this.props.board.lost() || this.props.board.won();
-    }
-  }, {
     key: "render",
     value: function render() {
-      var _this2 = this;
+      var _this = this;
 
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(StyledBoard, null, this.props.board.grid.map(function (gridrow, topIdx) {
         return gridrow.map(function (tile, idx) {
           return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Tile__WEBPACK_IMPORTED_MODULE_2__["default"], {
             key: idx,
             tile: tile,
-            reveal: tile.explored || _this2.revealBoard(),
-            updateGame: _this2.props.updateGame,
-            gameOver: _this2.revealBoard()
+            reveal: tile.explored || _this.props.revealBoard(),
+            updateGame: _this.props.updateGame,
+            gameOver: _this.props.revealBoard()
           });
         });
       }));
@@ -234,7 +225,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
 function _templateObject2() {
-  var data = _taggedTemplateLiteral(["\n    display: flex;\n    justify-content: center;\n    align-items: center;\n    height: 200px;\n    background: #0f2949;\n    color: #fff;\n    font-family: \"Anton\", sans-serif;\n    border-radius: 10px;\n    margin-bottom: 41px;\n    transition: 300ms all ease-in;\n    h3 {\n        letter-spacing: 1px;\n        font-size: 2.5rem;\n    }\n    div {\n        display: flex;\n        justify-content: center;\n        align-items: center;\n        background: #fff;\n        width: 50%;\n        height: 40%;\n    }\n"]);
+  var data = _taggedTemplateLiteral(["\n    flex-wrap: wrap;\n    background: #0f2949;\n    color: #fff;\n    font-family: \"Anton\", sans-serif;\n    border-radius: 10px;\n    margin-bottom: 41px;\n    text-align: center;\n    padding: 22px;\n    transition: 300ms all ease-in;\n    h3 {\n        letter-spacing: 1px;\n        font-size: 2.5rem;\n        margin: 0 10px 20px;\n    }\n    div {\n        display: flex;\n        justify-content: center;\n        align-items: center;\n        background: #fff;\n        width: 50%;\n        height: 40%;\n    }\n    button {\n        background: red;\n        color: #fff;\n        border: none;\n        border-radius: 5px;\n        text-transform: uppercase;\n        font-size: 1.2rem;\n        font-weight: 900;\n        outline: none;\n        padding: 10px 15px;\n        margin: 0 auto;\n        cursor: pointer;\n        display: none;\n        &.visible {\n            display: block;\n        }\n    }\n"]);
 
   _templateObject2 = function _templateObject2() {
     return data;
@@ -280,7 +271,9 @@ function (_React$Component) {
     };
     _this.updateGame = _this.updateGame.bind(_assertThisInitialized(_this));
     _this.checkGame = _this.checkGame.bind(_assertThisInitialized(_this));
+    _this.resetGame = _this.resetGame.bind(_assertThisInitialized(_this));
     _this.openModal = _this.openModal.bind(_assertThisInitialized(_this));
+    _this.revealBoard = _this.revealBoard.bind(_assertThisInitialized(_this));
     return _this;
   }
 
@@ -314,6 +307,11 @@ function (_React$Component) {
       }
     }
   }, {
+    key: "revealBoard",
+    value: function revealBoard() {
+      return this.state.board.lost() || this.state.board.won();
+    }
+  }, {
     key: "openModal",
     value: function openModal(status) {
       this.setState(function () {
@@ -324,11 +322,25 @@ function (_React$Component) {
       });
     }
   }, {
+    key: "resetGame",
+    value: function resetGame() {
+      this.setState(function () {
+        return {
+          board: new _minesweeper__WEBPACK_IMPORTED_MODULE_2__["Board"](9, 9),
+          status: "Game in Progress"
+        };
+      });
+    }
+  }, {
     key: "render",
     value: function render() {
-      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(StyledGame, null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(Modal, null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h3", null, this.state.status)), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Board__WEBPACK_IMPORTED_MODULE_3__["default"], {
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(StyledGame, null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(Modal, null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h3", null, this.state.status), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+        className: this.revealBoard() ? "visible" : "",
+        onClick: this.resetGame
+      }, "Play Again")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Board__WEBPACK_IMPORTED_MODULE_3__["default"], {
         board: this.state.board,
-        updateGame: this.updateGame
+        updateGame: this.updateGame,
+        revealBoard: this.revealBoard
       }));
     }
   }]);
