@@ -25,7 +25,7 @@ const Modal = styled.div`
     h3 {
         letter-spacing: 1px;
         font-size: 2.5rem;
-        margin: 0 10px 20px;
+        margin: 0;
     }
     div {
         display: flex;
@@ -45,7 +45,7 @@ const Modal = styled.div`
         font-weight: 900;
         outline: none;
         padding: 10px 15px;
-        margin: 0 auto;
+        margin: 20px auto 10px;
         cursor: pointer;
         display: none;
         &.visible {
